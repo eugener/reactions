@@ -1,9 +1,6 @@
 import { observable /* , computed */ } from 'mobx';
 
-// TODO Replace with standard React event handler
-export interface ActionHandler { 
-    (): void;
-}
+type ActionHandler = () => void;
 
 export class Action {
 
@@ -15,9 +12,9 @@ export class Action {
     private handler: ActionHandler;
 
     constructor( text: string, icon?: string, description?: string, handler?: ActionHandler ) {
-        this.text = text ? text : '';
+        this.text        = text ? text : '';
         this.description = description ? description : '';
-        this.icon = icon ? icon : '';
+        this.icon        = icon ? icon : '';
         if (handler) { this.handler = handler; }
     }
 
@@ -32,7 +29,8 @@ class ActionSet<T extends Action> extends Action {
 
 export class ActionGroup extends ActionSet<Action> {
 
-    @observable readonly items: Action[];
+    // @observable 
+    readonly items: Action[];
 
     constructor( text: string, icon?: string, description?: string, ...actions: Action[] ) {
         super(text, icon, description);

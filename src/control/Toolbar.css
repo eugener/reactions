@@ -1,0 +1,22 @@
+@import '~antd/dist/antd.css';
+
+.toolbar {
+    text-align: justify;
+    background: #fff;
+    padding: 10px;
+}
+
+.toolbar .ant-btn {
+    margin-right: 5px;
+}
+
+.toolbar.right {
+    text-align: right;
+    background: #fff;
+    padding: 10px;
+}
+
+.anticon {
+    font-size: 1.2em;
+    font-weight: bold;
+}

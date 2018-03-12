@@ -6,14 +6,13 @@ import { ActionButton, ActionGroupButton } from './AntdComponents';
 
 export class AntdElementFactory implements ElementFactory {
 
-    toButton(action: Action, iconOnly: boolean = true ): JSX.Element {
-        let button;   
+    toButton(action: Action, iconOnly: boolean ): JSX.Element {
+
         if ( action instanceof ActionGroup ) {
-            button = (<ActionGroupButton action={action as ActionGroup} iconOnly={iconOnly} />);
-        } else {
-            button = (<ActionButton action={action} iconOnly={iconOnly} /> );
-        }
-        return button;
+            return (<ActionGroupButton action={action as ActionGroup} iconOnly={iconOnly} />);
+        } 
+        return (<ActionButton action={action} iconOnly={iconOnly} /> );
+        
     }
 
 }

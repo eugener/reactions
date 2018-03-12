@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { observer } from 'mobx-react';
+import { enableLogging } from 'mobx-logger';
 
 import Button from 'antd/lib/button';
 import Tooltip from 'antd/lib/tooltip';
@@ -9,6 +10,10 @@ import Menu from 'antd/lib/menu';
 import Icon from 'antd/lib/icon';
 
 import { Action, ActionGroup } from './Action';
+
+const MenuItem = Menu.Item;
+
+enableLogging({});
 
 export interface ActionProps<T extends Action> {
     action: T;
@@ -31,10 +36,10 @@ export class ActionButton extends React.Component<ActionButtonProps<Action>> {
         let text   = this.props.iconOnly && action.icon.length > 0 ? null : action.text;
 
         return (
-            <Tooltip placement="bottom" title={action.description}>
+            <Tooltip placement="bottom" title={action.description} key={'action-button-' + new Date().getTime}>
                 <Button 
-                    disabled={!action.enabled} 
                     icon={action.icon} 
+                    disabled={!action.enabled} 
                     onClick={e => { action.execute(); }} 
                 > 
                 {text}
@@ -55,34 +60,11 @@ export class ActionMenuItem extends React.Component<ActionMenuItemProps<Action>>
 
     render() {
         let action = this.props.action;
+        // disabled={!action.enabled}
         return (
-            <Menu.Item key={this.props.key} icon={action.icon} disabled={!action.enabled}>
-                <Icon type={action.icon}>
-                {action.text}
-                </Icon>
+            <Menu.Item key={this.props.key} icon={action.icon}>
+                <Icon type={action.icon}/> {action.text}
             </Menu.Item> 
-        );
-    }
-
-}
-
-export interface ActionMenuProps<T extends Action>  {
-    actions: T[];
-}
-
-@observer
-export class ActionMenu extends React.Component<ActionMenuProps<Action>> {
-
-    render() {
-        let actions = this.props.actions;
-        return ( 
-            <Menu onClick={e => this.props.actions[+e.key].execute()}>
-                {  
-                    actions.map( (a, key, arr) => 
-                       <ActionMenuItem action={a} key={key + 1} />
-                    )
-                };
-            </Menu>
         );
     }
 
@@ -95,13 +77,27 @@ export class ActionGroupButton extends React.Component<ActionButtonProps<ActionG
 
         let action = this.props.action;
         let text   = this.props.iconOnly && action.icon.length > 0 ? null : action.text;
-        let menu   = <ActionMenu actions={action.items}/>;
+        let actions = action.items;
+
+        // <ActionMenuItem action={a} key={key + 1} />
+        let menu = (
+            <Menu onClick={e => actions[+e.key].execute()}>
+                {
+                    actions.map( (a, key, arr) => 
+                        <MenuItem key={key} disabled={!a.enabled}>
+                            <Icon type={a.icon}/> {a.text}
+                        </MenuItem>
+                    )
+                };
+            </Menu>
+
+            // <Button>text</Button>
+        );
 
         return (
-            <Dropdown overlay={menu} > 
+            <Dropdown overlay={menu}> 
                 <Button icon={action.icon} disabled={!action.enabled}>
-                    {text}
-                    <Icon type="down" />
+                {text} <Icon type="down" />
                 </Button>
             </Dropdown>    
         );

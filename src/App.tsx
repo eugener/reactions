@@ -1,26 +1,43 @@
 import * as React from 'react';
 import './App.css';
-import { ActionTools } from './action/ActionTools';
 import { Action, ActionGroup } from './action/Action';
+import Notificaiton from 'antd/lib/notification';
+import Icon from 'antd/lib/icon';
+import { Toolbar } from './control/Toolbar';
 
 const logo = require('./logo.svg');
-const action1 = new Action('Action 1', 'edit', 'Action 1 Description');
-const action2 = new Action(
-  'Action 2',
-  'cloud', 
-  'Action 2 Description', 
-  () => { 
-    action1.enabled = !(action1.enabled); 
-  } 
-);
-const action3 = new ActionGroup( 
-  'Action 3',
-  'cloud-o', 
-  'Action 3 Description', 
-  action1, action2
-);
 
 class App extends React.Component {
+
+  action1 = new Action('Refresh', 'sync', 'Refreshe the data');
+  action2 = new Action(
+      'New', 
+      'plus-circle-o', 
+      'Create new currency',
+      () => { this.action1.enabled = !(this.action1.enabled); }
+  );
+
+  actions: Array<Action> = [
+    this.action1,
+    this.action2,
+    new Action('Edit', 'edit', 'Edit selected currency', this.notify),
+    new Action('Delete', 'close-circle-o', 'Delete selected currency', this.notify),
+    new ActionGroup('Group', 'cloud', 'Action Group', this.action1, this.action2 ),
+    // new RadioActionGroup( 
+    //    new SelectableAction('radio 1'),
+    //    new SelectableAction('radio 2')
+    // )
+  ];
+
+  notify(): void {
+    Notificaiton.open({
+      icon: <Icon type="info-o" />,
+      message: 'Notification',
+      description: 'Action executed',
+      duration: 3,
+    });
+  }
+
   render() {
     return (
       <div className="App">
@@ -31,9 +48,7 @@ class App extends React.Component {
         <p className="App-intro">
           To get started, edit <code>src/App.tsx</code> and save to reload.
         </p>
-        {ActionTools.toButton(action1)}
-        {ActionTools.toButton(action2)}
-        {ActionTools.toButton(action3)}
+        <Toolbar iconOnly={false} actions={this.actions} />
       </div>
     );
   }

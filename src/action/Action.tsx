@@ -12,9 +12,9 @@ export class Action {
     private handler: ActionHandler;
 
     constructor( text: string, icon?: string, description?: string, handler?: ActionHandler ) {
-        this.text = text ? text : '';
+        this.text        = text ? text : '';
         this.description = description ? description : '';
-        this.icon = icon ? icon : '';
+        this.icon        = icon ? icon : '';
         if (handler) { this.handler = handler; }
     }
 
@@ -29,7 +29,8 @@ class ActionContainer<T extends Action> extends Action {
 
 export class ActionGroup extends ActionContainer<Action> {
 
-    @observable readonly items: Action[];
+    // @observable 
+    readonly items: Action[];
 
     constructor( text: string, icon?: string, description?: string, ...actions: Action[] ) {
         super(text, icon, description);

@@ -9,9 +9,8 @@ import Dropdown from 'antd/lib/dropdown';
 import Menu from 'antd/lib/menu';
 import Icon from 'antd/lib/icon';
 
-import { Action, ActionGroup } from './Action';
-
-const MenuItem = Menu.Item;
+import { Action, ActionGroup, ActionRadioGroup } from './Action';
+import ButtonGroup from 'antd/lib/button/button-group';
 
 enableLogging({});
 
@@ -60,11 +59,31 @@ export class ActionMenuItem extends React.Component<ActionMenuItemProps<Action>>
 
     render() {
         let action = this.props.action;
-        // disabled={!action.enabled}
         return (
-            <Menu.Item key={this.props.key} icon={action.icon}>
+            <Menu.Item key={this.props.key} icon={action.icon} disabled={!action.enabled}>
                 <Icon type={action.icon}/> {action.text}
             </Menu.Item> 
+        );
+    }
+
+}
+
+@observer
+export class ActionRadioButtonGroup extends React.Component<ActionButtonProps<ActionRadioGroup>> {
+
+    render() {
+        return (
+            <ButtonGroup>
+                { 
+                    this.props.action.items.map( a => 
+                        <ActionButton 
+                           action={a} 
+                           iconOnly={this.props.iconOnly} 
+                           key={new Date().getUTCMilliseconds() + Math.random()}
+                        /> 
+                    )
+                }
+            </ButtonGroup>
         );
     }
 
@@ -77,21 +96,19 @@ export class ActionGroupButton extends React.Component<ActionButtonProps<ActionG
 
         let action = this.props.action;
         let text   = this.props.iconOnly && action.icon.length > 0 ? null : action.text;
-        let actions = action.items;
+        let actions = this.props.action.items;
 
         // <ActionMenuItem action={a} key={key + 1} />
         let menu = (
             <Menu onClick={e => actions[+e.key].execute()}>
                 {
                     actions.map( (a, key, arr) => 
-                        <MenuItem key={key} disabled={!a.enabled}>
+                        <Menu.Item key={key} disabled={!a.enabled}>
                             <Icon type={a.icon}/> {a.text}
-                        </MenuItem>
+                        </Menu.Item>
                     )
                 };
             </Menu>
-
-            // <Button>text</Button>
         );
 
         return (

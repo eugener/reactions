@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './App.css';
-import { Action, ActionGroup } from './action/Action';
+import { Action, ActionGroup, ActionRadioGroup } from './action/Action';
 import Notificaiton from 'antd/lib/notification';
 import Icon from 'antd/lib/icon';
 import { Toolbar } from './control/Toolbar';
@@ -23,10 +23,10 @@ class App extends React.Component {
     new Action('Edit', 'edit', 'Edit selected currency', this.notify),
     new Action('Delete', 'close-circle-o', 'Delete selected currency', this.notify),
     new ActionGroup('Group', 'cloud', 'Action Group', this.action1, this.action2 ),
-    // new RadioActionGroup( 
-    //    new SelectableAction('radio 1'),
-    //    new SelectableAction('radio 2')
-    // )
+    new ActionRadioGroup( 
+      new Action('X', 'X', 'X selected currency'),
+      new Action('Y', 'Y', 'Y selected currency')
+    )
   ];
 
   notify(): void {

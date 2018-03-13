@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { observable, computed } from 'mobx';
 
 type ActionHandler = () => void;
 
@@ -8,6 +8,7 @@ export class Action {
     @observable description: string  = '';
     @observable icon:        string  = '';
     @observable enabled:     boolean = true;
+    @observable selected:    boolean = false;
 
     private handler: ActionHandler;
 
@@ -29,12 +30,30 @@ class ActionContainer<T extends Action> extends Action {
 
 export class ActionGroup extends ActionContainer<Action> {
 
-    // @observable 
     readonly items: Action[];
 
     constructor( text: string, icon?: string, description?: string, ...actions: Action[] ) {
         super(text, icon, description);
         this.items = actions;
+    }
+
+    execute(): void { /* no-op */ }
+
+}
+
+export class ActionRadioGroup extends ActionContainer<Action> {
+
+    @observable
+    readonly items: Action[];
+
+    constructor( ...actions: Action[] ) {
+        super('');
+        this.items = actions;
+    }
+
+    @computed get selection(): Action[] {
+        let selection = this.items.find(i =>  i.selected);
+        return selection ? [selection] : [];
     }
 
     execute(): void { /* no-op */ }
